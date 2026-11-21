@@ -1,0 +1,17 @@
+services:
+  worker:
+    build: .
+    env_file: .env
+    environment:
+      ICORE_CATALOG: /catalog/catalog.yaml
+      WORKER_STATE: /state/worker.sqlite3
+    volumes:
+      - "${ICORE_CATALOG_FILE:-./catalog.yaml}:/catalog/catalog.yaml:ro"
+      - worker-state:/state
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    restart: unless-stopped
+    stop_grace_period: 3m
+volumes:
+  worker-state:
